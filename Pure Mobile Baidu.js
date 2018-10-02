@@ -20,10 +20,6 @@
                 "position": "relative",
                 "top": "310px",
             });
-            $('#skin-wrap~*').css({
-                "position": "relative",
-                "top": "100px",
-            });
         }
         //clean results
         $('#page-tips, #results>div:not([order]), [class*="c-recomm-wrap"], [tpl="recommend_list"], [class*="ec_"], .page-banner').remove();
