@@ -18,7 +18,7 @@
             });
             $('#bottom').css({
                 "position": "relative",
-                "top": "310px",
+                "top": "200px",
             });
         }
         //clean results
