@@ -29,7 +29,7 @@
 			const header = document.querySelector('#header');
 			const logo = document.querySelector('#logo');
 			const foot = document.querySelector('#foot');
-			logo.style.marginTop = window.innerHeight / 6 + 'px';
+			logo.style.marginTop = window.innerHeight / 4 - logo.offsetHeight + 'px';
 			foot.style.marginTop = window.innerHeight - header.offsetHeight - foot.offsetHeight + 'px';
 			const whiteEles = document.querySelectorAll('#index-card, .navs-bottom-bar, #bottom');
 			for (let i = 0; i < whiteEles.length; i++) {
