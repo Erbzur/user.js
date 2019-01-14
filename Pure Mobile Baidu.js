@@ -1,38 +1,47 @@
 // ==UserScript==
 // @name			Pure Mobile Baidu
-// @version			1.5
+// @namespace		http://tampermonkey.net/
+// @version			2.0
 // @description		Purify the shitty baidu search page on mobile devices
-// @editor			Erbzur
+// @author			Erbzur
 // @include			*m.baidu.com*
-// @run-at			document-start
+// @grant			none
 // ==/UserScript==
 
-(function() {
-
-    function purify() {
-        $('#index-card>div:not(#header):not(#bottom), .logined-banner, #header>#navs~*, #page-tips, #results>div:not([order]), [class*="c-recomm-wrap"], [tpl="recommend_list"], [class*="ec_"], .page-banner').remove();
-        $('#page-ft').css({
-            display: "none !important"
-        });
-        $('#page-copyright').css({
-            marginBottom: "0px !important"
-        });
-    }
-
-    var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
-    var observer = new MutationObserver(function(records) {
-        purify();
-    });
-    var option = {
-        'childList': true,
-        'subtree': true
-    };
-
-    document.onreadystatechange = function() {
-        if (document.readyState == "interactive") {
-            observer.observe(document.body, option);
-        }
-    };
-
-    purify();
+(function () {
+	'use strict';
+	const homepage = /(m\.baidu\.com\/$)|(m\.baidu\.com\/\?ref=)/;
+	const search = /\/s\?/;
+	function purify() {
+		let url = window.location.href;
+		if (search.test(url)) {
+			let rubbish = document.querySelectorAll('.page-banner, #page-tips, #results>div:not([order]), [class*="c-recomm-wrap"], [tpl="recommend_list"], [class*="ec_"]');
+			for (let i = 0; i < rubbish.length; i++) {
+				rubbish[i].remove();
+			}
+			document.querySelector('#page-ft').style.setProperty('display', 'none', 'important');
+			document.querySelector('#page-copyright').style.setProperty('margin-bottom', '0px', 'important');
+		} else if (homepage.test(url)) {
+			let rubbish = document.querySelectorAll('.logined-banner, .first-card-container, .blank-frame');
+			for (let i = 0; i < rubbish.length; i++) {
+				rubbish[i].remove();
+			}
+			document.querySelector('#logo').style.marginTop = screen.availHeight / 6 + 'px';
+			const header = document.querySelector('#header');
+			const foot = document.querySelector('#foot');
+			foot.style.marginTop = screen.availHeight - header.offsetHeight - foot.offsetHeight + 'px';
+			const whiteEles = document.querySelectorAll('#index-card, .navs-bottom-bar, #bottom');
+			for (let i = 0; i < whiteEles.length; i++) {
+				whiteEles[i].style.backgroundColor = 'white';
+			}
+		}
+	}
+	let MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+	const observer = new MutationObserver(function (records) {
+			purify();
+		});
+	observer.observe(document.body, {
+		'childList': true,
+		'subtree': true
+	});
 })();
