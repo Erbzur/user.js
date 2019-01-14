@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name			Pure Mobile Baidu
 // @namespace		http://tampermonkey.net/
-// @version			2.0
+// @version			2.1
 // @description		Purify the shitty baidu search page on mobile devices
 // @author			Erbzur
 // @include			*m.baidu.com*
@@ -10,7 +10,7 @@
 
 (function () {
 	'use strict';
-	const homepage = /(m\.baidu\.com\/$)|(m\.baidu\.com\/\?ref=)/;
+	const homepage = /(m\.baidu\.com\/$)|(m\.baidu\.com\/\?(ref|from)=)/;
 	const search = /\/s\?/;
 	function purify() {
 		let url = window.location.href;
@@ -26,10 +26,11 @@
 			for (let i = 0; i < rubbish.length; i++) {
 				rubbish[i].remove();
 			}
-			document.querySelector('#logo').style.marginTop = screen.availHeight / 6 + 'px';
 			const header = document.querySelector('#header');
+			const logo = document.querySelector('#logo');
 			const foot = document.querySelector('#foot');
-			foot.style.marginTop = screen.availHeight - header.offsetHeight - foot.offsetHeight + 'px';
+			logo.style.marginTop = window.innerHeight / 6 + 'px';
+			foot.style.marginTop = window.innerHeight - header.offsetHeight - foot.offsetHeight + 'px';
 			const whiteEles = document.querySelectorAll('#index-card, .navs-bottom-bar, #bottom');
 			for (let i = 0; i < whiteEles.length; i++) {
 				whiteEles[i].style.backgroundColor = 'white';
