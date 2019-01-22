@@ -28,7 +28,6 @@
 				rubbish[i].remove();
 			}
 			document.querySelector('#userinfo-wrap').style.setProperty('visibility', 'hidden');
-			document.body.style.setProperty('margin-bottom', 0 + 'px', 'important');
 			const header = document.querySelector('#header');
 			const logo = document.querySelector('#logo');
 			const foot = document.querySelector('#foot');
