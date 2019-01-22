@@ -12,6 +12,7 @@
 	'use strict';
 	const homepage = /(m\.baidu\.com\/$)|(m\.baidu\.com\/\?(ref|from)=)/;
 	const search = /\/s\?/;
+	const winHeight = window.innerHeight;
 	function purify() {
 		let url = window.location.href;
 		if (search.test(url)) {
@@ -27,11 +28,12 @@
 				rubbish[i].remove();
 			}
 			document.querySelector('#userinfo-wrap').style.setProperty('visibility', 'hidden');
+			document.body.style.setProperty('margin-bottom', 0 + 'px', 'important');
 			const header = document.querySelector('#header');
 			const logo = document.querySelector('#logo');
 			const foot = document.querySelector('#foot');
-			logo.style.setProperty('margin-top', window.innerHeight / 4 - logo.offsetHeight + 'px', 'important');
-			foot.style.setProperty('margin-top', window.innerHeight - header.offsetHeight - foot.offsetHeight + 'px', 'important');
+			logo.style.setProperty('margin-top', winHeight / 4 - logo.offsetHeight + 'px', 'important');
+			foot.style.setProperty('margin-top', winHeight - header.offsetHeight - foot.offsetHeight + 'px', 'important');
 			const whiteEles = document.querySelectorAll('#index-card, .navs-bottom-bar, #bottom');
 			for (let i = 0; i < whiteEles.length; i++) {
 				whiteEles[i].style.backgroundColor = 'white';
