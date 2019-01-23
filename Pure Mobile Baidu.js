@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name			Pure Mobile Baidu
 // @namespace		http://tampermonkey.net/
-// @version			2.2
+// @version			2.3
 // @description		Purify the shitty baidu search page on mobile devices
 // @author			Erbzur
 // @include			*m.baidu.com*
+// @run-at			document-start
 // @grant			none
 // ==/UserScript==
 
