@@ -1,23 +1,22 @@
 // ==UserScript==
 // @name			Pure Mobile Baidu
 // @namespace		http://tampermonkey.net/
-// @version			2.3
+// @version			3.0
 // @description		Purify the shitty baidu search page on mobile devices
 // @author			Erbzur
 // @include			*m.baidu.com*
-// @run-at			document-start
 // @grant			none
 // ==/UserScript==
 
 (function () {
 	'use strict';
-	const homepage = /(m\.baidu\.com\/$)|(m\.baidu\.com\/\?(ref|from)=)/;
+	const homepage = /m\.baidu\.com\/$|m\.baidu\.com\/\?/;
 	const search = /\/s\?/;
 	const winHeight = window.innerHeight;
 	function purify() {
 		let url = window.location.href;
 		if (search.test(url)) {
-			let rubbish = document.querySelectorAll('.page-banner, #page-tips, #results>div:not([order]), [class*="c-recomm-wrap"], [tpl="recommend_list"], [class*="ec_"]');
+			let rubbish = document.querySelectorAll('.page-banner, #page-tips, #results>div:not([order]), [class*="c-recomm-wrap"], [tpl="recommend_list"], [tpl="sigma_celebrity_rela"], [class*="ec_"]');
 			for (let i = 0; i < rubbish.length; i++) {
 				rubbish[i].remove();
 			}
@@ -52,4 +51,42 @@
 		'childList': true,
 		'subtree': true
 	});
+
+	function redirect() {
+		const reg = /https?([^']*)/;
+		const results = document.querySelectorAll('#results>.c-result');
+		for (let result of results) {
+			const dataUrl = result.dataset.log.match(reg);
+			const clickElements = result.querySelectorAll('a[href]');
+			for (let ele of clickElements) {
+				if (dataUrl) {
+					ele.setAttribute('href', 'https' + dataUrl[1]);
+				} else if (ele.dataset && ele.dataset.url) {
+					ele.setAttribute('href', 'https' + ele.dataset.url.match(reg)[1]);
+				}
+			}
+		}
+	}
+	window.onload = redirect;
+
+	function isChild(child, parent) {
+		while (true) {
+			if (child === parent) {
+				return true;
+			}
+			if (child === document) {
+				return false;
+			}
+			child = child.parentNode;
+		}
+	}
+	const list = document.querySelectorAll('#results, #page-controller, .se-bn, .se-head-tablink, #page-relative');
+	window.addEventListener('click', function (event) {
+		for (let ele of list) {
+			if (isChild(event.target, ele)) {
+				event.stopPropagation();
+				break;
+			}
+		}
+	}, true);
 })();
