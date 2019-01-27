@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name			Pure Mobile Baidu
 // @namespace		http://tampermonkey.net/
-// @version			3.0
+// @version			3.1
 // @description		Purify the shitty baidu search page on mobile devices
 // @author			Erbzur
 // @include			*m.baidu.com*
@@ -10,11 +10,33 @@
 
 (function () {
 	'use strict';
+	const winHeight = window.innerHeight;
 	const homepage = /m\.baidu\.com\/$|m\.baidu\.com\/\?/;
 	const search = /\/s\?/;
-	const winHeight = window.innerHeight;
+	const url = window.location.href;
+	const MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+	const observer = new MutationObserver(function (records) {
+			purify();
+		});
+	observer.observe(document.body, {
+		'childList': true,
+		'subtree': true
+	});
+	purify();
+	if (search.test(url)) {
+		window.onload = redirect;
+		const list = document.querySelectorAll('#results, #page-controller, .se-bn, .se-head-tablink, #page-relative');
+		window.addEventListener('click', function (event) {
+			for (let ele of list) {
+				if (isChild(event.target, ele)) {
+					event.stopPropagation();
+					break;
+				}
+			}
+		}, true);
+	}
+
 	function purify() {
-		let url = window.location.href;
 		if (search.test(url)) {
 			let rubbish = document.querySelectorAll('.page-banner, #page-tips, #results>div:not([order]), [class*="c-recomm-wrap"], [tpl="recommend_list"], [tpl="sigma_celebrity_rela"], [class*="ec_"]');
 			for (let i = 0; i < rubbish.length; i++) {
@@ -43,15 +65,6 @@
 			}
 		}
 	}
-	let MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
-	const observer = new MutationObserver(function (records) {
-			purify();
-		});
-	observer.observe(document.body, {
-		'childList': true,
-		'subtree': true
-	});
-
 	function redirect() {
 		const reg = /https?([^']*)/;
 		const results = document.querySelectorAll('#results>.c-result');
@@ -67,8 +80,6 @@
 			}
 		}
 	}
-	window.onload = redirect;
-
 	function isChild(child, parent) {
 		while (true) {
 			if (child === parent) {
@@ -80,13 +91,4 @@
 			child = child.parentNode;
 		}
 	}
-	const list = document.querySelectorAll('#results, #page-controller, .se-bn, .se-head-tablink, #page-relative');
-	window.addEventListener('click', function (event) {
-		for (let ele of list) {
-			if (isChild(event.target, ele)) {
-				event.stopPropagation();
-				break;
-			}
-		}
-	}, true);
 })();
