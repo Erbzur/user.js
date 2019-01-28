@@ -19,7 +19,7 @@ if (typeof PureBaidu === 'undefined') {
 /*DevTools*/
 if (typeof DevTool === 'undefined') {
 	var DevTool = null;
-	if (/&dev=true/.test(window.location.href)) {
+	if (/dev=true/.test(window.location.href)) {
 		let position = document.querySelector('html');
 		let newTag = [];
 		/*vConsole*/
