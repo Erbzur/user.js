@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name			Pure Mobile Baidu
-// @namespace		http://tampermonkey.net/
-// @version			3.1
-// @description		Purify the shitty baidu search page on mobile devices
+// @namespace			http://tampermonkey.net/
+// @version			3.2
+// @description			Purify the shitty baidu search page on mobile devices
 // @author			Erbzur
 // @include			*m.baidu.com*
 // @grant			none
@@ -10,23 +10,30 @@
 
 (function () {
 	'use strict';
-	const winHeight = window.innerHeight;
 	const homepage = /m\.baidu\.com\/$|m\.baidu\.com\/\?/;
 	const search = /\/s\?/;
 	const url = window.location.href;
+	const winHeight = window.innerHeight;
 	const MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
-	const observer = new MutationObserver(function (records) {
+	const cleanTask = new MutationObserver(records => {
 			purify();
 		});
-	observer.observe(document.body, {
-		'childList': true,
-		'subtree': true
+	cleanTask.observe(document.body, {
+		childList: true,
+		subtree: true
 	});
 	purify();
 	if (search.test(url)) {
-		window.onload = redirect;
-		const list = document.querySelectorAll('#results, #page-controller, .se-bn, .se-head-tablink, #page-relative');
-		window.addEventListener('click', function (event) {
+		const redirTask = new MutationObserver(records => {
+				redirect();
+			});
+		redirTask.observe(document.body, {
+			attributeFilter: ['href'],
+			childList: true
+		});
+		redirect();
+		window.addEventListener('click', event => {
+			const list = document.querySelectorAll('#results, #page-controller, .se-bn, .se-head-tablink, #page-relative');
 			for (let ele of list) {
 				if (isChild(event.target, ele)) {
 					event.stopPropagation();
