@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name			Pure Mobile Baidu
 // @namespace			http://tampermonkey.net/
-// @version			3.2
+// @version			3.3
 // @description			Purify the shitty baidu search page on mobile devices
 // @author			Erbzur
 // @include			*m.baidu.com*
@@ -33,19 +33,15 @@
 		});
 		redirect();
 		window.addEventListener('click', event => {
-			const list = document.querySelectorAll('#results, #page-controller, .se-bn, .se-head-tablink, #page-relative');
-			for (let ele of list) {
-				if (isChild(event.target, ele)) {
-					event.stopPropagation();
-					break;
-				}
+			if (clickable(event.target)) {
+				event.stopPropagation();
 			}
 		}, true);
 	}
 
 	function purify() {
 		if (search.test(url)) {
-			let rubbish = document.querySelectorAll('.page-banner, #page-tips, #results>div:not([order]), [class*="c-recomm-wrap"], [tpl="recommend_list"], [tpl="sigma_celebrity_rela"], [class*="ec_"]');
+			let rubbish = document.querySelectorAll('.page-banner, #page-pre, #page-tips, #results>div:not([order]), [class*="c-recomm-wrap"], [tpl="recommend_list"], [tpl="sigma_celebrity_rela"], [class*="ec_"]');
 			for (let i = 0; i < rubbish.length; i++) {
 				rubbish[i].remove();
 			}
@@ -54,7 +50,7 @@
 				document.querySelector('#page-copyright').style.setProperty('margin-bottom', '0px', 'important');
 			} catch (e) {}
 		} else if (homepage.test(url)) {
-			let rubbish = document.querySelectorAll('.logined-banner, .first-card-container, .blank-frame');
+			let rubbish = document.querySelectorAll('#constant~*, .blank-frame');
 			for (let i = 0; i < rubbish.length; i++) {
 				rubbish[i].remove();
 			}
@@ -73,29 +69,33 @@
 		}
 	}
 	function redirect() {
-		const reg = /https?([^']*)/;
+		const urlReg = /http[^']*/;
+		const resultReg = /_normal$|h5_mobile/;
 		const results = document.querySelectorAll('#results>.c-result');
 		for (let result of results) {
-			const dataUrl = result.dataset.log.match(reg);
+			const resultUrl = result.dataset.log.match(urlReg);
+			const resultType = result.getAttribute('tpl').match(resultReg);
 			const clickElements = result.querySelectorAll('a[href]');
 			for (let ele of clickElements) {
-				if (dataUrl) {
-					ele.setAttribute('href', 'https' + dataUrl[1]);
-				} else if (ele.dataset && ele.dataset.url) {
-					ele.setAttribute('href', 'https' + ele.dataset.url.match(reg)[1]);
+				if (ele.dataset && ele.dataset.url) {
+					ele.setAttribute('href', ele.dataset.url.match(urlReg)[0]);
+				} else if (resultUrl && (resultType || ele.querySelector('.c-title'))) {
+					if (resultUrl[0] !== 'https://baidu.com/') {
+						ele.setAttribute('href', resultUrl[0]);
+					}
 				}
 			}
 		}
 	}
-	function isChild(child, parent) {
+	function clickable(element) {
 		while (true) {
-			if (child === parent) {
+			if (element.getAttribute('href')) {
 				return true;
 			}
-			if (child === document) {
+			if (element === document.body) {
 				return false;
 			}
-			child = child.parentNode;
+			element = element.parentNode;
 		}
 	}
 })();
