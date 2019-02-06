@@ -56,16 +56,16 @@
 			}
 			try {
 				document.querySelector('#userinfo-wrap').style.setProperty('visibility', 'hidden');
-				const header = document.querySelector('#header');
 				const logo = document.querySelector('#logo');
-				const foot = document.querySelector('#foot');
 				logo.style.setProperty('margin-top', winHeight / 4 - logo.offsetHeight + 'px', 'important');
-				foot.style.setProperty('margin-top', winHeight - header.offsetHeight - foot.offsetHeight + 'px', 'important');
+				// const header = document.querySelector('#header');
+				// const foot = document.querySelector('#foot');
+				// foot.style.setProperty('margin-top', winHeight - header.offsetHeight - foot.offsetHeight + 'px', 'important');
 			} catch (e) {}
-			const whiteEles = document.querySelectorAll('#index-card, .navs-bottom-bar, #bottom');
-			for (let i = 0; i < whiteEles.length; i++) {
-				whiteEles[i].style.backgroundColor = 'white';
-			}
+			// const whiteEles = document.querySelectorAll('#index-card, .navs-bottom-bar, #bottom');
+			// for (let i = 0; i < whiteEles.length; i++) {
+				// whiteEles[i].style.backgroundColor = 'white';
+			// }
 		}
 	}
 	function redirect() {
