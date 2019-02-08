@@ -62,10 +62,10 @@
 				// const foot = document.querySelector('#foot');
 				// foot.style.setProperty('margin-top', winHeight - header.offsetHeight - foot.offsetHeight + 'px', 'important');
 			} catch (e) {}
-			// const whiteEles = document.querySelectorAll('#index-card, .navs-bottom-bar, #bottom');
-			// for (let i = 0; i < whiteEles.length; i++) {
-				// whiteEles[i].style.backgroundColor = 'white';
-			// }
+			const whiteEles = document.querySelectorAll('#index-card, .navs-bottom-bar, #bottom');
+			for (let i = 0; i < whiteEles.length; i++) {
+				whiteEles[i].style.backgroundColor = 'white';
+			}
 		}
 	}
 	function redirect() {
