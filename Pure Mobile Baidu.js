@@ -50,7 +50,7 @@
 				document.querySelector('#page-copyright').style.setProperty('margin-bottom', '0px', 'important');
 			} catch (e) {}
 		} else if (homepage.test(url)) {
-			let rubbish = document.querySelectorAll('#constant~*, .blank-frame');
+			let rubbish = document.querySelectorAll('#navs~*, .blank-frame');
 			for (let i = 0; i < rubbish.length; i++) {
 				rubbish[i].remove();
 			}
@@ -58,9 +58,9 @@
 				document.querySelector('#userinfo-wrap').style.setProperty('visibility', 'hidden');
 				const logo = document.querySelector('#logo');
 				logo.style.setProperty('margin-top', winHeight / 4 - logo.offsetHeight + 'px', 'important');
-				// const header = document.querySelector('#header');
-				// const foot = document.querySelector('#foot');
-				// foot.style.setProperty('margin-top', winHeight - header.offsetHeight - foot.offsetHeight + 'px', 'important');
+				const header = document.querySelector('#header');
+				const foot = document.querySelector('#foot');
+				foot.style.setProperty('margin-top', winHeight - header.offsetHeight - foot.offsetHeight + 'px', 'important');
 			} catch (e) {}
 			const whiteEles = document.querySelectorAll('#index-card, .navs-bottom-bar, #bottom');
 			for (let i = 0; i < whiteEles.length; i++) {
