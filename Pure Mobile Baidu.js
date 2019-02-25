@@ -15,25 +15,25 @@
 	const url = window.location.href;
 	const winHeight = window.innerHeight;
 	const MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
-	const cleanTask = new MutationObserver(records => {
+	const purifyTask = new MutationObserver(records => {
 			purify();
 		});
-	cleanTask.observe(document.body, {
+	purifyTask.observe(document.body, {
 		childList: true,
 		subtree: true
 	});
 	purify();
 	if (search.test(url)) {
-		const redirTask = new MutationObserver(records => {
+		const redirectTask = new MutationObserver(records => {
 				redirect();
 			});
-		redirTask.observe(document.body, {
+		redirectTask.observe(document.body, {
 			attributeFilter: ['href'],
 			childList: true
 		});
 		redirect();
 		window.addEventListener('click', event => {
-			if (clickable(event.target)) {
+			if (underHref(event.target)) {
 				event.stopPropagation();
 			}
 		}, true);
@@ -87,7 +87,7 @@
 			}
 		}
 	}
-	function clickable(element) {
+	function underHref(element) {
 		while (true) {
 			if (element.getAttribute('href')) {
 				return true;
