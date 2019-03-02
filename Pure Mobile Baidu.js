@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name			Pure Mobile Baidu
 // @namespace			http://tampermonkey.net/
-// @version			3.3
+// @version			3.4
 // @description			Purify the shitty baidu search page on mobile devices
 // @author			Erbzur
 // @include			*m.baidu.com*
 // @grant			none
 // ==/UserScript==
 
-(function () {
+(function() {
 	'use strict';
 	const homepage = /m\.baidu\.com\/$|m\.baidu\.com\/\?/;
 	const search = /\/s\?/;
@@ -16,8 +16,8 @@
 	const winHeight = window.innerHeight;
 	const MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
 	const purifyTask = new MutationObserver(records => {
-			purify();
-		});
+		purify();
+	});
 	purifyTask.observe(document.body, {
 		childList: true,
 		subtree: true
@@ -25,8 +25,8 @@
 	purify();
 	if (search.test(url)) {
 		const redirectTask = new MutationObserver(records => {
-				redirect();
-			});
+			redirect();
+		});
 		redirectTask.observe(document.body, {
 			attributeFilter: ['href'],
 			childList: true
@@ -68,25 +68,38 @@
 			}
 		}
 	}
+
 	function redirect() {
 		const urlReg = /http[^']*/;
-		const resultReg = /_normal$|h5_mobile/;
 		const results = document.querySelectorAll('#results>.c-result');
 		for (let result of results) {
 			const resultUrl = result.dataset.log.match(urlReg);
-			const resultType = result.getAttribute('tpl').match(resultReg);
 			const clickElements = result.querySelectorAll('a[href]');
 			for (let ele of clickElements) {
 				if (ele.dataset && ele.dataset.url) {
 					ele.setAttribute('href', ele.dataset.url.match(urlReg)[0]);
-				} else if (resultUrl && (resultType || ele.querySelector('.c-title'))) {
-					if (resultUrl[0] !== 'https://baidu.com/') {
-						ele.setAttribute('href', resultUrl[0]);
-					}
+				} else if (resultUrl && resultUrl[0] !== 'https://baidu.com/' && !redirectException(ele)) {
+					ele.setAttribute('href', resultUrl[0]);
 				}
 			}
 		}
 	}
+
+	function redirectException(element) {
+		const list = document.querySelectorAll('.c-line-bottom, div[rl-node]');
+		while (true) {
+			element = element.parentNode;
+			if (element.id === 'results') {
+				return false;
+			}
+			for (let ele of list) {
+				if (ele === element) {
+					return true;
+				}
+			}
+		}
+	}
+
 	function underHref(element) {
 		while (true) {
 			if (element.getAttribute('href')) {
