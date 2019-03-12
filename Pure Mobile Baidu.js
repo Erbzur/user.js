@@ -1,11 +1,11 @@
 // ==UserScript==
-// @name			Pure Mobile Baidu
-// @namespace			http://tampermonkey.net/
-// @version			3.4
-// @description			Purify the shitty baidu search page on mobile devices
-// @author			Erbzur
-// @include			*m.baidu.com*
-// @grant			none
+// @name            Pure Mobile Baidu
+// @namespace       http://tampermonkey.net/
+// @version         3.4
+// @description     purify the shitty mobile baidu pages
+// @author          Erbzur
+// @include         *m.baidu.com*
+// @grant           none
 // ==/UserScript==
 
 (function() {
