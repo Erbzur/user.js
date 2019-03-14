@@ -1,11 +1,11 @@
 // ==UserScript==
-// @name			UOOC
-// @namespace		http://tampermonkey.net/
-// @version			1.0
-// @description			uooc script for lazy person...
-// @author			Erbzur
-// @include			*www.uooc.net.cn*
-// @grant			none
+// @name            UOOC
+// @namespace       http://tampermonkey.net/
+// @version         1.0
+// @description     uooc script for lazy persons
+// @author          Erbzur
+// @include         *www.uooc.net.cn/home/learn/*
+// @grant           none
 // ==/UserScript==
 
 (function() {
