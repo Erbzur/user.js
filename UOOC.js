@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            UOOC
 // @namespace       http://tampermonkey.net/
-// @version         2.0
+// @version         2.1
 // @description     uooc script for lazy persons
 // @author          Erbzur
 // @include         *www.uooc.net.cn/home/learn/*
@@ -57,6 +57,7 @@
                     }, delay);
                 } else {
                     showNotice('遭遇测验，请完成测验后再继续！');
+                    lazyMode = false;
                 }
             } else {
                 const chapter = parent.querySelector('[class^="rank-"]').querySelector('.uncomplete');
