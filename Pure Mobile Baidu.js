@@ -49,7 +49,7 @@
                 document.querySelector('#page-copyright').style.setProperty('margin-bottom', '0px', 'important');
             } catch (e) {}
         } else if (homepage) {
-            let rubbish = document.querySelectorAll('#index-card>:not(#header):not(#menu-container):not(#bottom), #navs~*');
+            let rubbish = document.querySelectorAll('#index-card>:not(#header):not(#personal-center):not(#menu-container):not(#bottom), #navs~*');
             for (let i = 0; i < rubbish.length; i++) {
                 rubbish[i].remove();
             }
