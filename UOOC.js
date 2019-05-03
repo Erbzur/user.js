@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            UOOC
 // @namespace       http://tampermonkey.net/
-// @version         2.2
+// @version         2.3
 // @description     uooc script for lazy persons
 // @author          Erbzur
 // @include         *www.uooc.net.cn/home/learn/*
@@ -11,7 +11,7 @@
 (function() {
     'use strict';
     let lazyMode = false;
-    window.addEventListener('blur', event => {
+    window.addEventListener('visibilitychange', event => {
         const player = document.querySelector('video');
         lazySwitch(player);
     });
@@ -21,19 +21,20 @@
     autoplay();
 
     function lazySwitch(player) {
-        if (!lazyMode && player && !player.paused) {
+        if (player && !player.paused) {
             player.muted = true;
             player.playbackRate = 2;
             player.onended = autoplay;
-            lazyMode = true;
-            player.addEventListener('pause', event => {
+            player.onpause = () => {
                 if (lazyMode && !player.ended) {
                     player.muted = false;
                     player.playbackRate = 1;
                     player.onended = null;
+                    player.onpause = null;
                     lazyMode = false;
                 }
-            });
+            };
+            lazyMode = true;
         }
     }
 
@@ -51,13 +52,11 @@
                         const player = document.querySelector('video');
                         player.play();
                         if (lazyMode) {
-                            lazyMode = false;
                             lazySwitch(player);
                         }
                     }, delay);
                 } else {
                     showNotice('遭遇测验，请完成测验后再继续！');
-                    lazyMode = false;
                 }
             } else {
                 const chapter = parent.querySelector('[class^="rank-"]').querySelector('.uncomplete');
