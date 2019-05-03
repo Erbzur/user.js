@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            Pure Mobile Baidu
 // @namespace       http://tampermonkey.net/
-// @version         3.5
+// @version         3.6
 // @description     purify the shitty mobile baidu pages
 // @author          Erbzur
 // @include         *m.baidu.com*
@@ -49,7 +49,7 @@
                 document.querySelector('#page-copyright').style.setProperty('margin-bottom', '0px', 'important');
             } catch (e) {}
         } else if (homepage) {
-            let rubbish = document.querySelectorAll('#navs~*, .blank-frame, #index-card>article');
+            let rubbish = document.querySelectorAll('#index-card>:not(#header):not(#personal-center):not(#menu-container):not(#bottom), #navs~*');
             for (let i = 0; i < rubbish.length; i++) {
                 rubbish[i].remove();
             }
