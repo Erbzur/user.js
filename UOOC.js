@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            UOOC
 // @namespace       http://tampermonkey.net/
-// @version         2.1
+// @version         2.2
 // @description     uooc script for lazy persons
 // @author          Erbzur
 // @include         *www.uooc.net.cn/home/learn/*
@@ -42,7 +42,7 @@
         setTimeout(nextVideo, delay, document);
 
         function nextVideo(parent) {
-            const taskPoint = parent.querySelector('[class="basic ng-scope"]>.taskpoint');
+            const taskPoint = parent.querySelector('[class^="basic ng-scope"]:not(.complete)>.taskpoint');
             if (taskPoint) {
                 const video = taskPoint.parentNode.querySelector('.icon-video');
                 if (video) {
