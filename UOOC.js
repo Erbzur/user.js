@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            UOOC
 // @namespace       http://tampermonkey.net/
-// @version         2.3
+// @version         2.4
 // @description     uooc script for lazy persons
 // @author          Erbzur
 // @include         *www.uooc.net.cn/home/learn/*
@@ -11,22 +11,26 @@
 (function() {
     'use strict';
     let lazyMode = false;
-    window.addEventListener('visibilitychange', event => {
-        const player = document.querySelector('video');
-        lazySwitch(player);
-    });
     window.addEventListener('mouseout', event => {
         event.stopPropagation();
     }, true);
+    document.addEventListener('visibilitychange', event => {
+        if (document.visibilityState === 'hidden') {
+            const player = document.querySelector('video');
+            if (player) {
+                lazySwitch(player);
+            }
+        }
+    });
     autoplay();
 
     function lazySwitch(player) {
-        if (player && !player.paused) {
+        if (!player.paused) {
             player.muted = true;
             player.playbackRate = 2;
             player.onended = autoplay;
             player.onpause = () => {
-                if (lazyMode && !player.ended) {
+                if (!player.ended) {
                     player.muted = false;
                     player.playbackRate = 1;
                     player.onended = null;
@@ -40,7 +44,12 @@
 
     function autoplay() {
         const delay = 500;
-        setTimeout(nextVideo, delay, document);
+        const timer = setInterval(() => {
+            if (document.querySelector('[class^="rank-"]')) {
+                clearInterval(timer);
+                nextVideo(document);
+            }
+        }, delay);
 
         function nextVideo(parent) {
             const taskPoint = parent.querySelector('[class^="basic ng-scope"]:not(.complete)>.taskpoint');
@@ -48,11 +57,14 @@
                 const video = taskPoint.parentNode.querySelector('.icon-video');
                 if (video) {
                     video.click();
-                    setTimeout(() => {
+                    const timer = setInterval(() => {
                         const player = document.querySelector('video');
-                        player.play();
-                        if (lazyMode) {
-                            lazySwitch(player);
+                        if (player) {
+                            clearInterval(timer);
+                            player.play();
+                            if (lazyMode) {
+                                lazySwitch(player);
+                            }
                         }
                     }, delay);
                 } else {
@@ -64,7 +76,12 @@
                     if (!chapter.nextElementSibling) {
                         chapter.click();
                     }
-                    setTimeout(nextVideo, delay, chapter.parentNode);
+                    const timer = setInterval(() => {
+                        if (chapter.nextElementSibling) {
+                            clearInterval(timer);
+                            nextVideo(chapter.parentNode);
+                        }
+                    }, delay);
                 } else {
                     showNotice('视频进度已全部完成！');
                 }
