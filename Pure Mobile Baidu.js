@@ -10,8 +10,8 @@
 
 (function() {
     'use strict';
-    const homepage = document.querySelector('#index-card');
-    const search = document.querySelector('#page.search-page');
+    const homepage = /^https:\/\/m.baidu.com\/?/.test(location.href);
+    const search = /word=./.test(location.href);
     const winHeight = window.innerHeight;
     const MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
     const purifyTask = new MutationObserver(records => {
@@ -36,7 +36,6 @@
                 event.stopPropagation();
             }
         }, true);
-        console.log('Execution succeed!');
     }
 
     function purify() {
