@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            Pure Mobile Baidu
 // @namespace       http://tampermonkey.net/
-// @version         3.6
+// @version         3.7
 // @description     purify the shitty mobile baidu pages
 // @author          Erbzur
 // @include         *m.baidu.com*
@@ -10,8 +10,8 @@
 
 (function() {
     'use strict';
-    const homepage = document.querySelector('#index-card');
-    const search = document.querySelector('#page.search-page');
+    const homepage = /^https:\/\/m.baidu.com\/?/.test(location.href);
+    const search = /word=./.test(location.href);
     const winHeight = window.innerHeight;
     const MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
     const purifyTask = new MutationObserver(records => {
@@ -40,7 +40,7 @@
 
     function purify() {
         if (search) {
-            let rubbish = document.querySelectorAll('.page-banner, #page-pre, #page-tips, #results>div:not([order]), [class*="c-recomm-wrap"], [tpl="recommend_list"], [tpl="sigma_celebrity_rela"], [class*="ec_"]');
+            let rubbish = document.querySelectorAll('.page-banner, #page-pre, #page-tips, #results>div:not([order]), [class*="c-recomm-wrap"], [tpl="recommend_list"], [tpl="sigma_celebrity_rela"], [class*="ec_"], #page-copyright>[style]');
             for (let i = 0; i < rubbish.length; i++) {
                 rubbish[i].remove();
             }
