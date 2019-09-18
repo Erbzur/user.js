@@ -36,8 +36,8 @@
                 event.stopPropagation();
             }
         }, true);
+        console.log('Execution succeed!');
     }
-    console.log('Execution succeed!');
 
     function purify() {
         if (search) {
