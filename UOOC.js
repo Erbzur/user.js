@@ -8,29 +8,29 @@
 // @grant           none
 // ==/UserScript==
 
-(function() {
+(function(){
     'use strict';
     let lazyMode = false;
     window.addEventListener('mouseout', event => {
         event.stopPropagation();
     }, true);
     document.addEventListener('visibilitychange', event => {
-        if (document.visibilityState === 'hidden') {
+        if(document.visibilityState === 'hidden'){
             const player = document.querySelector('video');
-            if (player) {
+            if(player){
                 lazySwitch(player);
             }
         }
     });
     autoplay();
 
-    function lazySwitch(player) {
-        if (!player.paused) {
+    function lazySwitch(player){
+        if(!player.paused){
             player.muted = true;
             player.playbackRate = 2;
             player.onended = autoplay;
             player.onpause = () => {
-                if (!player.ended) {
+                if(!player.ended){
                     player.muted = false;
                     player.playbackRate = 1;
                     player.onended = null;
@@ -42,55 +42,55 @@
         }
     }
 
-    function autoplay() {
+    function autoplay(){
         const delay = 500;
         const timer = setInterval(() => {
-            if (document.querySelector('[class^="rank-"]')) {
+            if(document.querySelector('[class^="rank-"]')){
                 clearInterval(timer);
                 nextVideo(document);
             }
         }, delay);
 
-        function nextVideo(parent) {
+        function nextVideo(parent){
             const taskPoint = parent.querySelector('[class^="basic ng-scope"]:not(.complete)>.taskpoint');
-            if (taskPoint) {
+            if(taskPoint){
                 const video = taskPoint.parentNode.querySelector('.icon-video');
-                if (video) {
+                if(video){
                     video.click();
                     const timer = setInterval(() => {
                         const player = document.querySelector('video');
-                        if (player) {
+                        if(player){
                             clearInterval(timer);
                             player.play();
-                            if (lazyMode) {
+                            if(lazyMode){
                                 lazySwitch(player);
                             }
                         }
                     }, delay);
-                } else {
+                }else{
                     showNotice('遭遇测验，请完成测验后再继续！');
                 }
-            } else {
+            }else{
                 const chapter = parent.querySelector('[class^="rank-"]').querySelector('.uncomplete');
-                if (chapter) {
-                    if (!chapter.nextElementSibling) {
+                if(chapter){
+                    if(!chapter.nextElementSibling){
                         chapter.click();
                     }
                     const timer = setInterval(() => {
-                        if (chapter.nextElementSibling) {
+                        if(chapter.nextElementSibling){
                             clearInterval(timer);
                             nextVideo(chapter.parentNode);
                         }
                     }, delay);
-                } else {
+                }else{
                     showNotice('视频进度已全部完成！');
                 }
             }
         }
 
-        function showNotice(msg) {
+        function showNotice(msg){
             Notification.requestPermission().then((permission) => {
-                if (permission === 'granted') {
+                if(permission === 'granted'){
                     new Notification('自动播放中断', {
                         body: msg,
                         icon: 'http://www.uooc.net.cn/favicon.ico',
