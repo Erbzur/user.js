@@ -24,7 +24,12 @@
                 margin-left: 10px !important;
                 padding: 0 0px !important;
             }`,
-            `.Menu-item, .HotBanner, .MobileAppHeader-downloadLink {
+            `.Menu-item,
+             .HotBanner,
+             .MobileAppHeader-downloadLink,
+             .HotQuestions-title,
+             .HotQuestions-section>a,
+             .Question-main>div[style] {
                 display: none !important;
             }`
         ];

@@ -1,17 +1,17 @@
 // ==UserScript==
 // @name            Pure Mobile Baidu
 // @namespace       http://tampermonkey.net/
-// @version         4.0
+// @version         4.1
 // @description     purify the shitty mobile baidu pages
 // @author          Erbzur
-// @include         *m.baidu.com*
+// @include         *www.baidu.com*
 // @grant           none
 // ==/UserScript==
 
 (function(){
     'use strict';
     const search = /word=./.test(location.href);
-    const homepage = /^https:\/\/m.baidu.com\/?/.test(location.href);
+    const homepage = /^https:\/\/www.baidu.com\/?/.test(location.href);
     const search_rules = [
         '.page-banner',
         '#page-pre',
@@ -64,19 +64,13 @@
 
     function purify(){
         if(search){
-            let rubbish = document.querySelectorAll(search_rules.toString());
-            for(let i = 0; i < rubbish.length; i++){
-                rubbish[i].remove();
-            }
+            removeAds(search_rules);
             try{
                 document.querySelector('#page-ft').style.setProperty('display', 'none', 'important');
                 document.querySelector('#page-copyright').style.setProperty('margin-bottom', '0px', 'important');
             }catch(e){}
         }else if(homepage){
-            let rubbish = document.querySelectorAll(homepage_rules.toString());
-            for(let i = 0; i < rubbish.length; i++){
-                rubbish[i].remove();
-            }
+            removeAds(homepage_rules);
             try{
                 document.querySelector('#userinfo-wrap').style.setProperty('visibility', 'hidden');
                 const logo = document.querySelector('#logo');
@@ -86,9 +80,16 @@
                 foot.style.setProperty('margin-top', winHeight - header.offsetHeight - foot.offsetHeight + 'px', 'important');
             }catch(e){}
             const whiteEles = document.querySelectorAll('#index-card, .navs-bottom-bar, #bottom');
-            for(let i = 0; i < whiteEles.length; i++){
+            for(let i = 0; i < whiteEles.length; ++i){
                 whiteEles[i].style.backgroundColor = 'white';
             }
+        }
+    }
+
+    function removeAds(blacklist){
+        let rubbish = document.querySelectorAll(blacklist.toString());
+        for(let i = 0; i < rubbish.length; ++i){
+            rubbish[i].remove();
         }
     }
 
