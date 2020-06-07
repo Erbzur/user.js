@@ -1,6 +1,6 @@
 /* zhidao.baidu.com */
 (function(){
-	'use strict';
+    'use strict';
     const rules = [
         '#main-content>div:not(.question-container):not(.question-line):not(.question-comment-wrapper)',
         '.question-container>div:not(.wgt-question):not(.question-answer-container):not(.question-line)' +
