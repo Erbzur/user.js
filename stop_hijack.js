@@ -8,7 +8,7 @@
     ];
     let flag = false;
     for(let ele of watchlist){
-        if(location.href.indexOf(ele) !== -1){
+        if(location.hostname.indexOf(ele) !== -1){
             flag = true;
         }
     }
