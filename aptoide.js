@@ -1,6 +1,6 @@
 /* aptoide.com */
 (function(){
-	'use strict';
+    'use strict';
     if(!/\.aptoide.com$/.test(location.hostname)){
         return;
     }
