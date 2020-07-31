@@ -1,10 +1,9 @@
-/*stop hijack*/
+/* stop hijack */
 (function(){
     'use strict';
     const watchlist = [
         'zhihu',
-        'jianshu',
-        'dogedoge'
+        'jianshu'
     ];
     let flag = false;
     for(let ele of watchlist){
