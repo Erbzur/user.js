@@ -1,3 +1,4 @@
+/* zhihu.com */
 (function(){
     'use strict';
     Object.defineProperties(window.navigator, {
@@ -13,28 +14,36 @@
     });
     const MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
     const question = /\/question\//.test(location.href);
-    const search = /\/search?/.test(location.href);
+    const search = /\/search\?/.test(location.href);
     const homepage = /www.zhihu.com\/$|utm_medium/.test(location.href);
     if(question){
         const rules = [
+            `.MobileAppHeader-downloadLink,
+             .HotBanner,
+             .HotQuestions-title,
+             .HotQuestions-section>a,
+             .HotQuestions-bottomButton,
+             .Question-main>div[style],
+             #div-gpt-ad-hotFeedAd {
+                display: none !important;
+            }`,
             `.ContentItem-actions {
                 flex-wrap: wrap;
             }`,
-            `.ContentItem-action {
-                margin-left: 10px !important;
-                padding: 0 0px !important;
+            `.Menu-item.ContentItem-action {
+                width: unset !important;
             }`,
-            `.Menu-item,
-             .HotBanner,
-             .MobileAppHeader-downloadLink,
-             .HotQuestions-title,
-             .HotQuestions-section>a,
-             .Question-main>div[style] {
-                display: none !important;
+            `.Button.ContentItem-action, .Popover {
+                margin-left: 10px !important;
+                padding: 0 !important;
+            }`,
+            `.VoteButton, .AnswerItem-selfMenuItem {
+                padding: 0 10px !important;
             }`
         ];
         adjustView(rules);
-        fixSearchFunc();
+        addSearchBox();
+        addOpenInAppButton();
     }else if(search){
         window.onload = () => {
             document.querySelector('.MobileAppHeader-actions').style.setProperty('width', '100%');
@@ -45,29 +54,142 @@
         };
     }else if(homepage){
         const rules = [
+            `.TopstoryItem--advertCard,
+             .MobileAppHeader-downloadLink,
+             .DownloadGuide {
+                display: none !important;
+            }`,
+            `.RichContent.is-collapsed .RichContent-inner {
+                max-height: unset;
+            }`,
             `.ContentItem-actions {
                 flex-wrap: wrap;
             }`,
-            `.VoteButton {
+            `.Menu-item.ContentItem-action {
+                width: unset !important;
+            }`,
+            `.Button.ContentItem-action, .Popover {
+                margin-left: 10px !important;
+                padding: 0 !important;
+            }`,
+            `.VoteButton, .AnswerItem-selfMenuItem {
                 padding: 0 10px !important;
             }`,
-            `.ContentItem-action {
-                margin-left: 10px !important;
-                padding-left: 0px !important;
-            }`,
-            `[class="ContentItem-actions"]>:nth-last-child(2),
-             .Popover,
-             .ContentItem-actions.ContentItem-action>:last-child,
-             .TopstoryItem--advertCard,
-             .MobileAppHeader-downloadLink {
-                display: none !important;
-            }`,
-            `.ContentItem-actions.ContentItem-action {
-                margin-left: 0px !important;
+            `.ZVideoItem-toolbar {
+                padding: 0 !important;
             }`
         ];
         adjustView(rules);
-        fixSearchFunc();
+        addSearchBox();
+    }
+
+    function addOpenInAppButton(){
+        new MutationObserver(records => {
+            if(document.readyState === 'complete' && !document.querySelector('#open-in-app')){
+                const openInApp = document.createElement('button');
+                openInApp.id = 'open-in-app';
+                openInApp.setAttribute('style', `
+                    position: fixed;
+                    right: 12px;
+                    bottom: 70px;
+                    z-index: 100;
+                    margin: 0;
+                    padding: 0;
+                    width: 40px;
+                    line-height: 40px;
+                    font-size: 20px;
+                    color: #fff;
+                    background: #0084ff;
+                    border-radius: 20px;
+                    box-shadow: 0 2px 5px rgba(26,26,26,.25);
+                    border: none;
+                    outline: none;
+                `);
+                openInApp.innerText = 'A';
+                openInApp.addEventListener('click', event => {
+                    const pattern = location.pathname.match(/\/question\/([0-9]+)(?:\/answer\/([0-9]+))?/);
+                    location.href = `zhihu://${pattern[2] ? `answers/${pattern[2]}` : `questions/${pattern[1]}`}`;
+                });
+                const root = document.querySelector('#root');
+                const backToTop = document.querySelector('.CornerAnimayedFlex');
+                if(root.hasChildNodes()){
+                    if(backToTop){
+                        backToTop.parentNode.insertBefore(openInApp, backToTop);
+                    }
+                }else{
+                    openInApp.style.setProperty('width', '50%');
+                    openInApp.style.setProperty('right', '50%');
+                    openInApp.style.setProperty('transform', 'translate(50%)');
+                    openInApp.innerText = 'Open In App';
+                    root.appendChild(openInApp);
+                }
+            }
+        }).observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    }
+
+    function addSearchBox(){
+        new MutationObserver(records => {
+            if(!document.querySelector('.MobileAppHeader-searchBox') && !document.querySelector('.added-searchBox')){
+                const input = document.createElement('input');
+                input.setAttribute('type', 'search');
+                input.setAttribute('placeholder', 'search');
+                input.setAttribute('style', `
+                    width: 95%;
+                    padding: 0;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    font-family: inherit;
+                    font-size: 95%;
+                    font-weight: inherit;
+                    background: transparent;
+                    border: none;
+                    resize: none;
+                    outline: none;
+                `);
+                input.addEventListener('keydown', event => {
+                    if(event.key === 'Enter'){
+                        location.href = `https://www.zhihu.com/search?q=${input.value}`;
+                    }
+                });
+                const wrapper = document.createElement('div');
+                wrapper.setAttribute('style', `
+                    width: 80%;
+                    height: 32px;
+                    border-radius: 20px;
+                    border: 1px solid #ebebeb;
+                    background-color: rgba(235, 235, 235, 0.7);
+                    display: flex;
+                    align-items: center;
+                    padding-left: 10px;
+                `);
+                wrapper.appendChild(input);
+                const searchBox = document.createElement('div');
+                searchBox.className = 'added-searchBox';
+                searchBox.setAttribute('style', `
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                `);
+                searchBox.appendChild(wrapper);
+                const header = document.querySelector('.MobileAppHeader-actions');
+                if(header){
+                    header.parentNode.insertBefore(searchBox, header);
+                }
+                const menu = document.querySelector('.MobileAppHeader-navItem');
+                if(menu && menu.style){
+                    menu.style.setProperty('margin-left', '0');
+                    menu.style.setProperty('margin-right', '16px');
+                }
+            }
+        }).observe(document.body, {
+            childList: true,
+            subtree: true
+        });
     }
 
     function adjustView(rules){
@@ -75,53 +197,6 @@
         document.head.appendChild(style);
         for(let i = 0; i < rules.length; ++i){
             style.sheet.insertRule(rules[i]);
-        }
-    }
-
-    function fixSearchFunc(){
-        const addSearchBoxTask = new MutationObserver(records => {
-            if(!document.querySelector('.MobileAppHeader-searchBox') && !document.querySelector('.added-searchBox')){
-                addSearchBox();
-            }
-        });
-        addSearchBoxTask.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-    }
-
-    function addSearchBox(){
-        const searchBar = document.createElement('div');
-        searchBar.setAttribute('style', `
-            width: 80%;
-            height: 32px;
-            border-radius: 20px;
-            border: 1px solid #ebebeb;
-            background-color: rgba(235, 235, 235, 0.7);
-            display: flex;
-            align-items: center;
-            padding-left: 10px;
-        `);
-        searchBar.addEventListener('click', () => {
-            location.href = 'https://www.zhihu.com/search?type=content&q=';
-        }, true);
-        searchBar.innerHTML = `<svg class="Zi Zi--Search" fill="#999" viewBox="0 0 24 24" width="18" height="18">
-                                 <path d="M17.068 15.58a8.377 8.377 0 0 0 1.774-5.159 8.421 8.421 0 1 0-8.42 8.421 8.38 8.38 0 0 0 5.158-1.774l3.879 3.88c.957.573 2.131-.464 1.488-1.49l-3.879-3.878zm-6.647 1.157a6.323 6.323 0 0 1-6.316-6.316 6.323 6.323 0 0 1 6.316-6.316 6.323 6.323 0 0 1 6.316 6.316 6.323 6.323 0 0 1-6.316 6.316z" fill-rule="evenodd">
-                                 </path>
-                               </svg>`;
-        const searchBox = document.createElement('div');
-        searchBox.className = 'added-searchBox';
-        searchBox.setAttribute('style', `
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        `);
-        searchBox.appendChild(searchBar);
-        const menu = document.querySelector('.MobileAppHeader-actions');
-        if(menu){
-            menu.parentNode.insertBefore(searchBox, menu);
         }
     }
 })();
