@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name            iTunes HD Covers
-// @namespace       http://tampermonkey.net/
+// @namespace       https://github.com/Erbzur/user.js
 // @version         1.0
 // @description     click on the cover to get the 1500x1500 picture.
 // @author          Erbzur

@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name            UOOC
-// @namespace       http://tampermonkey.net/
+// @namespace       https://github.com/Erbzur/user.js
 // @version         2.4
 // @description     uooc script for lazy persons
 // @author          Erbzur

@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name            Pure Mobile Baidu
-// @namespace       http://tampermonkey.net/
+// @namespace       https://github.com/Erbzur/user.js
 // @version         4.1
 // @description     purify the shitty mobile baidu pages
 // @author          Erbzur
