@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            Zhihu Share Answer
 // @namespace       https://github.com/Erbzur/user.js
-// @version         1.0
+// @version         1.1
 // @description     add support to copy answer link for convenience
 // @author          Erbzur
 // @include         *www.zhihu.com/question/*
@@ -11,15 +11,14 @@
 (function(){
     'use strict';
     const MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
-    const answerList = document.querySelector('div[role="list"]');
 
-    new MutationObserver(addShareButton).observe(answerList, {
+    new MutationObserver(addShareButton).observe(document.body, {
         childList: true,
         subtree: true
     });
 
     function addShareButton(mutationList, observer){
-        const answers = document.querySelectorAll('div[class="List-item"][tabindex]');
+        const answers = document.querySelectorAll('div[tabindex="0"]:not([class*="share"])');
         answers.forEach(answer => {
             const meta = answer.querySelector('meta[content^="https://www.zhihu.com/question/"]');
             if(meta){
