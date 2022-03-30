@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            Zhihu Share Answer
 // @namespace       https://github.com/Erbzur/user.js
-// @version         1.1
+// @version         1.2
 // @description     add support to copy answer link for convenience
 // @author          Erbzur
 // @include         *www.zhihu.com/question/*
@@ -26,17 +26,11 @@
                 if(spanUpvotedInfo){
                     const shareButton = document.createElement('span');
                     shareButton.innerHTML = `<span class="Voters">
-                                                <button type="button" class="Button Button--plain">复制链接</button>
+                                                <button type="button" class="Button Button--plain">
+                                                    <a href="${meta.content}" target="_blank">答案链接</a>
+                                                </button>
                                              </span>`.oneLine();
                     shareButton.style.setProperty('margin', '0 3em');
-                    shareButton.addEventListener('click', async event => {
-                        try{
-                            await navigator.clipboard.writeText(meta.content);
-                            window.alert('复制成功');
-                        }catch(err){
-                            window.prompt('Copy to clipboard: Ctrl+C, Enter', meta.content);
-                        }
-                    });
                     spanUpvotedInfo.appendChild(shareButton);
                     answer.classList.add('share');
                 }
