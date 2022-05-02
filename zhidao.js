@@ -1,5 +1,5 @@
 /* zhidao.baidu.com */
-(function(){
+(function() {
     'use strict';
     const rules = [
         '#main-content>div:not(.question-container):not(.question-line):not(.question-comment-wrapper)',
@@ -9,7 +9,7 @@
     window.onload = () => {
         let rubbish = document.querySelectorAll(rules.toString());
         console.log(rubbish.length);
-        for(let i = 0; i < rubbish.length; i++){
+        for (let i = 0; i < rubbish.length; i++) {
             rubbish[i].remove();
         }
     };

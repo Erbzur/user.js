@@ -1,16 +1,16 @@
 /* aptoide.com */
-(function(){
+(function() {
     'use strict';
-    if(!/\.aptoide.com$/.test(location.hostname)){
+    if (!/\.aptoide.com$/.test(location.hostname)) {
         return;
     }
     const info = JSON.parse(document.querySelector('script[id="__NEXT_DATA__"]').text);
     const curApp = info.props.pageProps.app;
-    if(curApp){
+    if (curApp) {
         const req = new XMLHttpRequest();
         req.onreadystatechange = () => {
-            if(req.readyState === 4 && req.status === 200){
-                if(req.response){
+            if (req.readyState === 4 && req.status === 200) {
+                if (req.response) {
                     addButtons(JSON.parse(req.response));
                 }
             }
@@ -19,7 +19,7 @@
         req.send();
     }
 
-    function addButtons(res){
+    function addButtons(res) {
         const container = document.createElement('div');
         container.setAttribute('id', 'direct-download-buttons');
         container.setAttribute('style',
@@ -44,7 +44,7 @@
         apkButton.setAttribute('href', res.data.file.path);
         apkButton.innerHTML = getButtonHtml('Download APK');
         container.appendChild(apkButton);
-        if(res.data.obb){
+        if (res.data.obb) {
             const obbButton = document.createElement('a');
             obbButton.setAttribute('class', 'obb-button');
             obbButton.setAttribute('href', res.data.obb.main.path);

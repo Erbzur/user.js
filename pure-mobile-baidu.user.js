@@ -9,7 +9,7 @@
 // @grant           none
 // ==/UserScript==
 
-(function(){
+(function() {
     'use strict';
     const search = /word=./.test(location.href);
     const homepage = /^https:\/\/(www|m).baidu.com\/?/.test(location.href);
@@ -28,7 +28,7 @@
          #relativewords>.c-line-clamp1 {
              display: none !important;
          }`,
-         `#page-copyright {
+        `#page-copyright {
              margin-bottom: 0px !important;
          }`
     ];
@@ -37,10 +37,10 @@
          #navs~* {
              display: none !important;
          }`,
-         `#userinfo-wrap {
+        `#userinfo-wrap {
              visibility: hidden;
          }`,
-         `#index-card, .navs-bottom-bar, #bottom {
+        `#index-card, .navs-bottom-bar, #bottom {
              background-color: white !important;
          }`
     ];
@@ -49,19 +49,19 @@
 
     const style = document.createElement('style');
     document.head.appendChild(style);
-    if(search){
+    if (search) {
         searchRules.forEach(rule => style.sheet.insertRule(rule));
         new MutationObserver(enableOpenInNewTab).observe(document.body, {
-            attributeFilter: ['href'],
+            attributeFilter: [ 'href' ],
             childList: true
         });
         enableOpenInNewTab();
         window.addEventListener('click', event => {
-            if(underHref(event.target)){
+            if (underHref(event.target)) {
                 event.stopPropagation();
             }
         }, true);
-    }else if(homepage){
+    } else if (homepage) {
         homepageRules.forEach(rule => style.sheet.insertRule(rule));
         new MutationObserver(adjustLayout).observe(document.body, {
             childList: true,
@@ -69,23 +69,24 @@
         });
         adjustLayout();
         window.addEventListener('focus', event => {
-            if(event.target.id === 'index-kw'){
+            if (event.target.id === 'index-kw') {
                 event.stopPropagation();
             }
         }, true);
     }
 
-    function adjustLayout(){
-        try{
+    function adjustLayout() {
+        try {
             const logo = document.querySelector('#logo');
             logo.style.setProperty('margin-top', winHeight / 4 - logo.offsetHeight + 'px', 'important');
             const header = document.querySelector('#header');
             const foot = document.querySelector('#foot');
             foot.style.setProperty('margin-top', winHeight - header.offsetHeight - foot.offsetHeight + 'px', 'important');
-        }catch(e){}
+        } catch (ignored) {
+        }
     }
 
-    function enableOpenInNewTab(){
+    function enableOpenInNewTab() {
         document.querySelectorAll('#results>.c-result').forEach(result => {
             result.querySelectorAll('a[href]').forEach(aTag => {
                 aTag.setAttribute('target', '_blank');
@@ -93,12 +94,12 @@
         });
     }
 
-    function underHref(element){
-        while(true){
-            if(element.getAttribute('href')){
+    function underHref(element) {
+        while (true) {
+            if (element.getAttribute('href')) {
                 return true;
             }
-            if(element === document.body){
+            if (element === document.body) {
                 return false;
             }
             element = element.parentNode;
