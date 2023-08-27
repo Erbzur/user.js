@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            Pure Mobile Baidu
 // @namespace       https://github.com/Erbzur/user.js
-// @version         4.2
+// @version         4.3
 // @description     purify the shitty mobile baidu pages
 // @author          Erbzur
 // @include         *www.baidu.com*
@@ -9,7 +9,7 @@
 // @grant           none
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
     const search = /word=./.test(location.href);
     const homepage = /^https:\/\/(www|m).baidu.com\/?/.test(location.href);
@@ -25,6 +25,7 @@
          [class*="ec_"],
          #page-copyright>[style],
          .na-like-container,
+         [data-video-player],
          #relativewords>.c-line-clamp1 {
              display: none !important;
          }`,
@@ -52,7 +53,7 @@
     if (search) {
         searchRules.forEach(rule => style.sheet.insertRule(rule));
         new MutationObserver(enableOpenInNewTab).observe(document.body, {
-            attributeFilter: [ 'href' ],
+            attributeFilter: ['href'],
             childList: true
         });
         enableOpenInNewTab();
@@ -82,8 +83,7 @@
             const header = document.querySelector('#header');
             const foot = document.querySelector('#foot');
             foot.style.setProperty('margin-top', winHeight - header.offsetHeight - foot.offsetHeight + 'px', 'important');
-        } catch (ignored) {
-        }
+        } catch (ignored) { /* empty */ }
     }
 
     function enableOpenInNewTab() {
